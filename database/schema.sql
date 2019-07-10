@@ -1,0 +1,6 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE user(
+    username TEXT NOT NULL PRIMARY KEY,
+    dateOfBirth TEXT NOT NULL );
+COMMIT;
