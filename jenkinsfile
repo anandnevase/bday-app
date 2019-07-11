@@ -6,7 +6,7 @@ node {
     stage('Build-docker-image'){
         sh 'sudo docker build -t anandnevase/bday .'
     }    
-    stage('Start Docker App') {
+    stage('Start App for testing') {
         try{
             sh 'sudo docker stop bday-test'
         }
@@ -25,5 +25,8 @@ node {
         finally{
             sh 'sudo docker stop bday-test'
         }
+    }
+    stage('Push to dockerhub'){
+        sh 'sudo docker push anandnevase/bday'
     }
 }
