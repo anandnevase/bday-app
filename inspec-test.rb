@@ -14,7 +14,13 @@ control 'Birthday App testing - PUT Request' do
     headers: {'Content-Type' => 'application/json'},
     data: '{"dateOfBirth": "2018-07-08"}') do
       its('status') { should cmp 400 }
-      #its('body') { should eq "{'message':'Username shoud contains only letters'}" }
+  end
+
+  describe json(content: http('http://localhost:7777/hello/anand124',
+                method: 'PUT',
+                headers: {'Content-Type' => 'application/json'},
+                data: '{"dateOfBirth": "2018-07-08"}').body) do
+    its('message') { should eq "Username shoud contains only letters" }
   end
 
   describe http('http://localhost:7777/hello/anand',
@@ -35,5 +41,9 @@ control 'Birthday App testing - GET Request' do
 
   describe http('http://localhost:7777/hello/anand124') do
       its('status') { should cmp 400 }
+  end
+
+  describe json(content: http('http://localhost:7777/hello/anand124').body) do
+    its('message') { should eq "username anand124 not found" }
   end
 end
