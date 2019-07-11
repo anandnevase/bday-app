@@ -15,10 +15,15 @@ node {
         }
         finally{
             sh 'sudo docker run --rm --name=bday-test -d -p  7777:80  anandnevase/bday:latest'
+            sh 'sleep 10s'
         }
     }
     stage('Automation-testing'){
-        sh 'inspec exec inspec-test.rb'
-        sh 'sudo docker stop bday-test'
+        try{
+            sh 'sudo inspec exec inspec-test.rb'
+        }
+        finally{
+            sh 'sudo docker stop bday-test'
+        }
     }
 }
