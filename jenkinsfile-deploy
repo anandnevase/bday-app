@@ -1,5 +1,0 @@
-node {
-    stage('Deploy app to AWS server'){
-      sh 'sudo ansible-playbook -i ",${aws_host}" deployment-playbook.yml -u ec2-user --key-file=/tmp/anand-aws-ssh-key.pem'
-    }
-}
