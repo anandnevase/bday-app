@@ -1,0 +1,37 @@
+- hosts: all
+  gather_facts: no
+  become: true
+  vars:
+    image_name: anandnevase/bday
+    app_name: bday
+    app_port: 80
+    host_port: 80
+  tasks:
+    - name: Create DB directory
+      file: 
+        path: /database
+        state: directory
+    - name: pull an image
+      docker_image:
+        name: '{{image_name}}'
+        pull: yes
+    - name: Stop a container
+      docker_container:
+        name: '{{app_name}}'
+        state: stopped
+      ignore_errors: true
+    - name: remove container
+      docker_container:
+        name: '{{app_name}}'
+        state: absent
+      ignore_errors: true
+    - name: Start new Container
+      docker_container:
+        name: '{{app_name}}'
+        image: '{{image_name}}'
+        state: started
+        restart: yes
+        ports:
+          - '{{host_port}}:{{app_port}}'
+        volumes:
+          - /database:/bday-app/database:z
