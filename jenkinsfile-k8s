@@ -31,10 +31,10 @@ node {
     }
     stage('Deploy app to AWS server'){
       try{
-      sh 'helm install --name bday-app ./k8s-deployment/bday-app --namespace bday-app'
+      sh 'sudo helm install --name bday-app ./k8s-deployment/bday-app --namespace bday-app'
       }
       finally{
-        sh 'helm upgrade  bday-app ./k8s-deployment/bday-app --namespace bday-app'
+        sh 'sudo helm upgrade  bday-app ./k8s-deployment/bday-app --namespace bday-app'
       }
     }
 }
