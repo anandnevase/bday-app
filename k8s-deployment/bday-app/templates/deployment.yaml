@@ -28,9 +28,6 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          volumeMounts:
-            - mountPath: /bday-app/database
-              name: bday-volume 
           livenessProbe:
             httpGet:
               path: /hello
