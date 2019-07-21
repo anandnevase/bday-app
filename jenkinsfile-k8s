@@ -1,0 +1,40 @@
+node {
+    stage('Git-checkout'){
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'anand-git', url: 'https://github.com/anandnevase/bday-app']]])
+    }
+    
+    stage('Build-docker-image'){
+        sh 'sudo docker build -t anandnevase/bday .'
+    }    
+    stage('Start App for testing') {
+        try{
+            sh 'sudo docker stop bday-test'
+        }
+        catch(Exception ex){
+            echo "app in not running"
+        }
+        finally{
+            sh 'sudo docker run --rm --name=bday-test -d -p  7777:80  anandnevase/bday:latest'
+            sh 'sleep 10s'
+        }
+    }
+    stage('Automation-testing'){
+        try{
+            sh 'sudo inspec exec inspec-test.rb'
+        }
+        finally{
+            sh 'sudo docker stop bday-test'
+        }
+    }
+    stage('Push to dockerhub'){
+        sh 'sudo docker push anandnevase/bday'
+    }
+    stage('Deploy app to AWS server'){
+      try{
+      sh 'helm install --name bday-app ./k8s-deployment/bday-app --namespace bday-app'
+      }
+      finally{
+        sh 'helm upgrade  bday-app ./k8s-deployment/bday-app --namespace bday-app'
+      }
+    }
+}
