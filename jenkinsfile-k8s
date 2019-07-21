@@ -29,7 +29,7 @@ node {
     stage('Push to dockerhub'){
         sh 'sudo docker push anandnevase/bday'
     }
-    stage('Deploy app to AWS server'){
+    stage('Deploy app to k8s server'){
       try{
       sh 'sudo helm install --name bday-app ./k8s-deployment/bday-app --namespace bday-app'
       }
