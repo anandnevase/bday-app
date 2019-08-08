@@ -86,7 +86,10 @@ def calculate_dates(original_date):
     now = datetime.datetime.now()
     delta1 = datetime.datetime(now.year, original_date.month, original_date.day)
     delta2 = datetime.datetime(now.year+1, original_date.month, original_date.day)
-    days = (max(delta1, delta2) - now).days
+    if original_date.month >= now.month and original_date.day >= now.day:
+        days = (delta1 - now).days + 1
+    else:
+        days = (delta2 - now).days
     return days
 
 DATABASE = './database/revolut.db'
@@ -118,7 +121,7 @@ def query_db(query, args=(), one=False, insert_update=False):
         rv = cur.fetchall()
         cur.close()
         result= (rv[0] if rv else None) if one else rv
-        print("Type:"+str(type(result)))
+        #print("Type:"+str(type(result)))
         return result
     else:
         con.commit()
